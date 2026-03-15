@@ -107,8 +107,12 @@ if menu == "Dashboard":
         df = pd.DataFrame(data)
         
         # Métricas
-        col1.metric("Total", len(df))
-        col1.metric("Ativos", len(df[df['status_ativo'] == True]))
+        ativos = len(df[df['status_ativo'] == True])
+        inativos = len(df[df['status_ativo'] == False])
+
+        col1.metric("Total Cadastrado", len(df))
+        col2.metric("Ativos", ativos, delta=f"{ativos} operacional", delta_color="normal")
+        col3.metric("Inativos", inativos, delta=f"-{inativos} offline", delta_color="inverse")
         
         # Exibição
         st.subheader("Lista de Empreendimentos")
