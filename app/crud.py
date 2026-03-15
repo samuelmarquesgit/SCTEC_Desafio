@@ -7,6 +7,7 @@ from . import models, schemas
 
 
 def create_empreendimento(db: Session, payload: schemas.EmpreendimentoCreate) -> models.Empreendimento:
+    print(f"-> [CRUD] Criando empreendimento: {payload.nome_empreendimento}")
     obj = models.Empreendimento(
         nome_empreendimento=payload.nome_empreendimento,
         nome_empreendedor=payload.nome_empreendedor,
@@ -57,8 +58,10 @@ def update_empreendimento(
 ) -> models.Empreendimento | None:
     obj = get_empreendimento(db, empreendimento_id)
     if not obj:
+        print(f"!! [CRUD] Falha ao atualizar: ID {empreendimento_id} não encontrado")
         return None
 
+    print(f"-> [CRUD] Atualizando empreendimento: {obj.nome_empreendimento} (ID: {empreendimento_id})")
     data = payload.model_dump(exclude_unset=True)
     if "segmento_atuacao" in data and data["segmento_atuacao"] is not None:
         data["segmento_atuacao"] = data["segmento_atuacao"].value
@@ -75,7 +78,10 @@ def update_empreendimento(
 def delete_empreendimento(db: Session, empreendimento_id: int) -> bool:
     obj = get_empreendimento(db, empreendimento_id)
     if not obj:
+        print(f"!! [CRUD] Falha ao remover: ID {empreendimento_id} não encontrado")
         return False
+    
+    print(f"-> [CRUD] Removendo empreendimento: {obj.nome_empreendimento}")
     db.delete(obj)
     db.commit()
     return True
