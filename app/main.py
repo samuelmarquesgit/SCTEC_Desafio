@@ -29,6 +29,9 @@ def health() -> dict[str, str]:
     "/empreendimentos",
     response_model=schemas.EmpreendimentoOut,
     status_code=status.HTTP_201_CREATED,
+    tags=["Empreendimentos"],
+    summary="Cadastrar um novo empreendimento",
+    description="Cria um novo registro de empreendimento no banco de dados de Santa Catarina.",
 )
 def criar_empreendimento(
     payload: schemas.EmpreendimentoCreate,
@@ -37,7 +40,13 @@ def criar_empreendimento(
     return crud.create_empreendimento(db, payload)
 
 
-@app.get("/empreendimentos", response_model=list[schemas.EmpreendimentoOut])
+@app.get(
+    "/empreendimentos", 
+    response_model=list[schemas.EmpreendimentoOut],
+    tags=["Empreendimentos"],
+    summary="Listar empreendimentos",
+    description="Retorna uma lista de empreendimentos cadastrados, permitindo filtros por município, segmento e status.",
+)
 def listar_empreendimentos(
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=200),
@@ -56,7 +65,13 @@ def listar_empreendimentos(
     )
 
 
-@app.get("/empreendimentos/{empreendimento_id}", response_model=schemas.EmpreendimentoOut)
+@app.get(
+    "/empreendimentos/{empreendimento_id}", 
+    response_model=schemas.EmpreendimentoOut,
+    tags=["Empreendimentos"],
+    summary="Obter detalhes de um empreendimento",
+    description="Busca um empreendimento específico pelo seu ID único.",
+)
 def obter_empreendimento(
     empreendimento_id: int,
     db: Session = Depends(get_db),
@@ -67,7 +82,13 @@ def obter_empreendimento(
     return obj
 
 
-@app.put("/empreendimentos/{empreendimento_id}", response_model=schemas.EmpreendimentoOut)
+@app.put(
+    "/empreendimentos/{empreendimento_id}", 
+    response_model=schemas.EmpreendimentoOut,
+    tags=["Empreendimentos"],
+    summary="Atualizar um empreendimento",
+    description="Atualiza os dados de um empreendimento existente. Apenas os campos enviados no JSON serão alterados.",
+)
 def atualizar_empreendimento(
     empreendimento_id: int,
     payload: schemas.EmpreendimentoUpdate,
@@ -79,7 +100,13 @@ def atualizar_empreendimento(
     return obj
 
 
-@app.delete("/empreendimentos/{empreendimento_id}", status_code=status.HTTP_204_NO_CONTENT)
+@app.delete(
+    "/empreendimentos/{empreendimento_id}", 
+    status_code=status.HTTP_204_NO_CONTENT,
+    tags=["Empreendimentos"],
+    summary="Remover um empreendimento",
+    description="Exclui permanentemente um empreendimento do banco de dados.",
+)
 def remover_empreendimento(
     empreendimento_id: int,
     db: Session = Depends(get_db),

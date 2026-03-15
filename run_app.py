@@ -4,7 +4,22 @@ import sys
 import os
 
 def run_services():
-    print("Iniciando SCTEC (Back-end + Front-end)...")
+    print("--- Verificação de Ambiente SCTEC ---")
+    
+    # Garante que a pasta de dados existe
+    if not os.path.exists("data"):
+        print("📁 Criando diretório 'data' para persistência...")
+        os.makedirs("data")
+    
+    # Verifica arquivos essenciais
+    files_to_check = ["app/main.py", "frontend/main.py"]
+    for f in files_to_check:
+        if not os.path.exists(f):
+            print(f"❌ Erro crítico: Arquivo {f} não encontrado!")
+            return
+
+    print("✅ Ambiente validado. Iniciando serviços...")
+    print("-----------------------------------")
     
     # 1. Inicia o Backend (FastAPI)
     backend_process = subprocess.Popen(
@@ -13,14 +28,14 @@ def run_services():
         stderr=subprocess.STDOUT,
         text=True
     )
-    print("Back-end (API) iniciado em http://127.0.0.1:8000")
+    print("🚀 Back-end (API) iniciado em http://127.0.0.1:8000")
 
     # Aguarda um pouco para o backend subir
     time.sleep(2)
 
     # 2. Inicia o Frontend (Streamlit)
     try:
-        print("Abrindo Front-end (Streamlit)...")
+        print("🎨 Abrindo Front-end (Streamlit)...")
         subprocess.run(
             [sys.executable, "-m", "streamlit", "run", "frontend/main.py"],
             check=True
@@ -29,7 +44,7 @@ def run_services():
         print("\n\nTerminando serviços...")
     finally:
         backend_process.terminate()
-        print("Serviços encerrados.")
+        print("🛑 Serviços encerrados.")
 
 if __name__ == "__main__":
     run_services()

@@ -3,6 +3,7 @@ import pandas as pd
 from api_client import APIClient
 import time
 import httpx
+import re
 
 @st.cache_data
 def get_municipios_sc():
@@ -81,7 +82,8 @@ else:
 
 # Segmentos de atuação
 SEGMENTOS = ["Tecnologia", "Comércio", "Indústria", "Serviços", "Agronegócio"]
-MUNICIPIOS_SC = get_municipios_sc()
+with st.spinner("Sincronizando municípios (IBGE)..."):
+    MUNICIPIOS_SC = get_municipios_sc()
 
 # --- PÁGINA: DASHBOARD ---
 if menu == "Dashboard":
@@ -107,8 +109,12 @@ if menu == "Dashboard":
         df = pd.DataFrame(data)
         
         # Métricas
-        col1.metric("Total", len(df))
-        col1.metric("Ativos", len(df[df['status_ativo'] == True]))
+        ativos = len(df[df['status_ativo'] == True])
+        inativos = len(df[df['status_ativo'] == False])
+
+        col1.metric("Total Cadastrado", len(df))
+        col2.metric("Ativos", ativos, delta=f"{ativos} operacional", delta_color="normal")
+        col3.metric("Inativos", inativos, delta=f"-{inativos} offline", delta_color="inverse")
         
         # Exibição
         st.subheader("Lista de Empreendimentos")
@@ -149,8 +155,12 @@ elif menu == "Cadastrar Novo":
         submit = st.form_submit_button("Finalizar Cadastro")
         
         if submit:
+            email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+            
             if not all([nome_e, nome_p, municipio, segmento, contato]):
                 st.error("Por favor, preencha todos os campos obrigatórios (*).")
+            elif "@" in contato and not re.match(email_pattern, contato):
+                st.error("O formato do e-mail inserido é inválido.")
             else:
                 payload = {
                     "nome_empreendimento": nome_e,
@@ -220,10 +230,13 @@ elif menu == "Gerenciar":
                     st.rerun()
         
         with b2:
-            if st.button("Excluir", type="secondary"):
-                if api.delete_empreendimento(item['id']):
-                    st.warning("Empreendimento removido.")
-                    st.rerun()
+             with st.popover("🗑️ Excluir"):
+                st.warning("⚠️ Tem certeza que deseja remover este item?")
+                if st.button("Confirmar Exclusão", type="primary"):
+                    if api.delete_empreendimento(item['id']):
+                        st.warning("Empreendimento removido.")
+                        time.sleep(1)
+                        st.rerun()
 
 st.sidebar.markdown("---")
 st.sidebar.caption("Desenvolvido para o desafio SCTEC")
