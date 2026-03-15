@@ -221,10 +221,13 @@ elif menu == "Gerenciar":
                     st.rerun()
         
         with b2:
-            if st.button("Excluir", type="secondary"):
-                if api.delete_empreendimento(item['id']):
-                    st.warning("Empreendimento removido.")
-                    st.rerun()
+             with st.popover("🗑️ Excluir"):
+                st.warning("⚠️ Tem certeza que deseja remover este item?")
+                if st.button("Confirmar Exclusão", type="primary"):
+                    if api.delete_empreendimento(item['id']):
+                        st.warning("Empreendimento removido.")
+                        time.sleep(1)
+                        st.rerun()
 
 st.sidebar.markdown("---")
 st.sidebar.caption("Desenvolvido para o desafio SCTEC")
