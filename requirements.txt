@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+SQLAlchemy
+pydantic
+pytest
+httpx
+python-dotenv
+streamlit
+pandas
