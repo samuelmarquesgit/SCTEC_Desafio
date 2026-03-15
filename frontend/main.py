@@ -81,7 +81,8 @@ else:
 
 # Segmentos de atuação
 SEGMENTOS = ["Tecnologia", "Comércio", "Indústria", "Serviços", "Agronegócio"]
-MUNICIPIOS_SC = get_municipios_sc()
+with st.spinner("Sincronizando municípios (IBGE)..."):
+    MUNICIPIOS_SC = get_municipios_sc()
 
 # --- PÁGINA: DASHBOARD ---
 if menu == "Dashboard":
