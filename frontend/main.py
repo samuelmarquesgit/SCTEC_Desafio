@@ -3,6 +3,7 @@ import pandas as pd
 from api_client import APIClient
 import time
 import httpx
+import re
 
 @st.cache_data
 def get_municipios_sc():
@@ -149,8 +150,12 @@ elif menu == "Cadastrar Novo":
         submit = st.form_submit_button("Finalizar Cadastro")
         
         if submit:
+            email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+            
             if not all([nome_e, nome_p, municipio, segmento, contato]):
                 st.error("Por favor, preencha todos os campos obrigatórios (*).")
+            elif "@" in contato and not re.match(email_pattern, contato):
+                st.error("O formato do e-mail inserido é inválido.")
             else:
                 payload = {
                     "nome_empreendimento": nome_e,
