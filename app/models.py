@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from sqlalchemy import Boolean, Integer, String
+from datetime import datetime
+from sqlalchemy import Boolean, DateTime, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .db import Base
@@ -18,4 +19,8 @@ class Empreendimento(Base):
     status_ativo: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
     descricao: Mapped[str | None] = mapped_column(String(500), nullable=True)
+
+    data_criacao: Mapped[datetime] = mapped_column(
+        DateTime, server_default=func.now(), nullable=False
+    )
 

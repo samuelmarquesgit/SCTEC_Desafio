@@ -1,5 +1,4 @@
-from __future__ import annotations
-
+from datetime import datetime
 from enum import Enum
 
 from pydantic import BaseModel, Field
@@ -44,6 +43,7 @@ class EmpreendimentoUpdate(BaseModel):
 
 class EmpreendimentoOut(EmpreendimentoBase):
     id: int
+    data_criacao: datetime
 
     class Config:
         from_attributes = True
