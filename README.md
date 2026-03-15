@@ -7,7 +7,7 @@ O sistema permite que o usuário gerencie e armazene cadastros completos, inclui
 
 ## 🎥 Vídeo Pitch
 Assista ao vídeo de apresentação (Pitch Institucional) deste projeto clicando no link abaixo:
-- 👉 **[Link para o Vídeo Pitch (Substituir pela URL final)](https://#)**
+- 👉 **https://youtu.be/yL92D6bA3A8**
 
 ## 🚀 Tecnologias Utilizadas
 **Stack de Back-end (APIs REST e Negócios):**
